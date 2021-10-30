@@ -1,2 +1,2 @@
 # ServiceCreed
-CSN 291 
+Course Project for CSN-291
