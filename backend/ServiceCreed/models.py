@@ -12,14 +12,6 @@ class AppUser(AbstractUser):
     address = models.CharField(max_length=500,null=True)
     mobileNumber=  PhoneNumberField()
     profilePicture =models.ImageField()
-    class typeChoices(models.TextChoices):
-        CUSTOMER = 'Customer'
-        SERVICEPROVIDER = 'Service Provider'
-    type= models.CharField(
-        max_length=16,
-        choices=typeChoices.choices,
-        default=typeChoices.CUSTOMER,
-    )
 
     def __str__(self):
 
