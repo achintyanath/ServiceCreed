@@ -6,7 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class AppUser(AbstractUser):
 
-    userName=models.CharField(max_length=100,unique=True,null=False)
+    username=models.CharField(max_length=100,unique=True,null=False)
     email = models.EmailField(max_length=254)
     password =  models.CharField(max_length=100)
     address = models.CharField(max_length=500,null=True)
@@ -15,7 +15,7 @@ class AppUser(AbstractUser):
 
     def __str__(self):
 
-         return f"{self.userName}"
+         return f"{self.username}"
 
 
 class Service(models.Model):
