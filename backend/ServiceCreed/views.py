@@ -8,7 +8,7 @@ import requests
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import AppUser, Customer,ServiceProvider,Service, Order,PaymentDetails
-from .serializers import CustomerSerializer, ServiceSerializer,  ServiceProviderSerializer, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse
+from .serializers import CustomerSerializer, ServiceSerializer,  ServiceProviderSerializerElse,ServiceProviderSerializerGet, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse
 from rest_framework import viewsets
 from django.contrib.auth import  login, logout
 from django.core.exceptions import ValidationError
@@ -85,11 +85,23 @@ class CustomerViewSet(viewsets.ModelViewSet):
                 "status" : "not verified"
             }
             return Response(res,status=status.HTTP_401_UNAUTHORIZED)
+    
+    @action(methods=['GET'],detail = True, url_path='myorders',url_name = 'url_name',permission_classes=[AllowAny])
+    def myorder(self,request,pk):
+        print(pk)
+        myorders = Order.objects.filter(customer=pk)
+        myodersRes = OrderSerializerGet(myorders,many =True)
+        return Response(myodersRes.data,status=status.HTTP_200_OK)
 
 
 class ServiceProviderViewSet(viewsets.ModelViewSet):
     queryset = ServiceProvider.objects.all()
-    serializer_class = ServiceProviderSerializer
+    def get_serializer_class(self):
+        if self.action == 'get' or self.action=='list' or self.action=='retrieve' :
+            return ServiceProviderSerializerGet
+        else:
+            return ServiceProviderSerializerElse
+
     def get_permissions(self):
         if self.action == 'post' or self.action=='patch' or self.action=='put' :
             permission_classes =[AllowAny]
@@ -116,7 +128,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     
 class OrderViewSet(viewsets.ModelViewSet):
 
