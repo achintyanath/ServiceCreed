@@ -123,6 +123,13 @@ class ServiceProviderViewSet(viewsets.ModelViewSet):
             }
             return Response(res,status=status.HTTP_401_UNAUTHORIZED)
 
+    @action(methods=['GET'],detail = True, url_path='myorders',url_name = 'url_name',permission_classes=[AllowAny])
+    def myorder(self,request,pk):
+        print(pk)
+        myorders = Order.objects.filter(provider=pk)
+        myodersRes = OrderSerializerGet(myorders,many =True)
+        return Response(myodersRes.data,status=status.HTTP_200_OK)
+
 
 class ServiceViewSet(viewsets.ModelViewSet):
 
