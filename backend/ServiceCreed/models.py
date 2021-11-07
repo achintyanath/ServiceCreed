@@ -18,20 +18,28 @@ class AppUser(AbstractUser):
          return f"{self.username}"
 
 
+class Category(models.Model):
+    categoryName = models.CharField( max_length=50)
+    categoryImage = models.ImageField(upload_to='category',default = 'default.jpeg')
+    def __str__(self):
+        return f"{self.categoryName}"
+   
+
 class Service(models.Model):
+    category = models.ForeignKey(Category,on_delete=CASCADE, default=1)
     serviceName = models.CharField( max_length=50)
-    serviceImage = models.ImageField(upload_to='service',default = 'default.jpeg')
     description =models.CharField( max_length=200)
+    serviceImage = models.ImageField(upload_to='service',default = 'default.jpeg')
     def __str__(self):
         return f"{self.serviceName}"
-
 
 class Customer(AppUser):
     #myorders are specified using the related_name in Order Model : myCustomerOrders
     pass
 
 class ServiceProvider(AppUser):
-    services = models.ForeignKey(Service,related_name="providers_in_given_category", on_delete=CASCADE)
+    category = models.ForeignKey(Category,on_delete=CASCADE,default=1)
+    services = models.ForeignKey(Service,related_name="providers_in_given_category",on_delete=CASCADE)
     cost = models.DecimalField(max_digits=10, decimal_places=2,default=0,null=False)
     #orderrecived is accessed by related_name in Order Model:  myServiceOrders
     def __str__(self):

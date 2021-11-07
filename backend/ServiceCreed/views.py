@@ -7,8 +7,8 @@ from django.shortcuts import redirect
 import requests
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import AppUser, Customer,ServiceProvider,Service, Order,PaymentDetails
-from .serializers import CustomerSerializer, ServiceSerializer,  ServiceProviderSerializerElse,ServiceProviderSerializerGet, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse
+from .models import AppUser, Category, Customer,ServiceProvider,Service, Order,PaymentDetails
+from .serializers import CategorySerializer, CustomerSerializer, ServiceSerializer,  ServiceProviderSerializerElse,ServiceProviderSerializerGet, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse
 from rest_framework import viewsets
 from django.contrib.auth import  login, logout
 from django.core.exceptions import ValidationError
@@ -129,12 +129,20 @@ class ServiceProviderViewSet(viewsets.ModelViewSet):
         myorders = Order.objects.filter(provider=pk)
         myodersRes = OrderSerializerGet(myorders,many =True)
         return Response(myodersRes.data,status=status.HTTP_200_OK)
+    
+  
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
 
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    permission_classes = [AllowAny]
+
+class CategoryViewSet(viewsets.ModelViewSet):
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     permission_classes = [AllowAny]
     
 class OrderViewSet(viewsets.ModelViewSet):

@@ -1,6 +1,7 @@
+from django.db.models import fields
 from django.db.models.fields import CommaSeparatedIntegerField
 from rest_framework import serializers
-from .models import Customer, PaymentDetails, Service, ServiceProvider,  Order
+from .models import Category, Customer, PaymentDetails, Service, ServiceProvider,  Order
 
 
 
@@ -12,20 +13,27 @@ class CustomerSerializer(serializers.ModelSerializer):
 class ServiceProviderSerializerElse(serializers.ModelSerializer):
     class Meta:
         model = ServiceProvider
-        fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','services','cost']
+        fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','category','services','cost']
 
 class ServiceProviderSerializerGet(serializers.ModelSerializer):
 
     class Meta:
         model = ServiceProvider
-        fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','services','cost']
+        fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','category','services','cost']
         depth = 1
 
-class ServiceSerializer(serializers.ModelSerializer):
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id','categoryName','categoryImage']
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
     class Meta:
         model = Service
-        fields = ['id','serviceName', 'description','serviceImage']
+        fields = ['id','category','serviceName', 'description','serviceImage']
 
 class PaymentDetailsSerializerGet(serializers.ModelSerializer):
     class Meta:

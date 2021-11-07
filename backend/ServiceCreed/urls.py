@@ -1,5 +1,5 @@
 from django.urls import path
-from ServiceCreed.views import CustomerViewSet, ServiceProviderViewSet, ServiceViewSet, OrderViewSet, PaymentDetailsViewSet,loginrequest, logoutrequest
+from .views import  CategoryViewSet, CustomerViewSet, ServiceProviderViewSet, ServiceViewSet, OrderViewSet, PaymentDetailsViewSet,loginrequest, logoutrequest
 from rest_framework import routers
 from django.views.decorators.csrf import csrf_exempt
 
@@ -9,6 +9,7 @@ router.register(r'serviceprovider', ServiceProviderViewSet)
 router.register(r'service', ServiceViewSet)
 router.register(r'order', OrderViewSet)
 router.register(r'paymentdetail', PaymentDetailsViewSet)
+router.register(r'category', CategoryViewSet)
 
 urlpatterns = [
     path('login',csrf_exempt(loginrequest),name='loginrequest'),
