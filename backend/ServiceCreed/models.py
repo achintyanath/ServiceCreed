@@ -50,8 +50,6 @@ class ServiceProvider(AppUser):
     #orderrecived is accessed by related_name in Order Model:  myServiceOrders
     def __str__(self):
         return f"{self.username}"
-gi
-
 
 class PaymentDetails(models.Model):
     amount  = models.DecimalField(max_digits=10,decimal_places=2,default=0,null=False)
