@@ -1,4 +1,4 @@
-import re
+import datetime
 from django.shortcuts import render
 from rest_framework.response import Response
 from django import http
@@ -8,7 +8,7 @@ import requests
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import AppUser, Category, Customer,ServiceProvider,Service, Order,PaymentDetails
-from .serializers import CategorySerializer, CustomerSerializer, ServiceSerializer,  ServiceProviderSerializerElse,ServiceProviderSerializerGet, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse
+from .serializers import CategorySerializer, CustomerSerializerElse, CustomerSerializerGet, ServiceSerializer,  ServiceProviderSerializerElse,ServiceProviderSerializerGet, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse
 from rest_framework import viewsets
 from django.contrib.auth import  login, logout
 from django.core.exceptions import ValidationError
@@ -63,7 +63,11 @@ def logoutrequest(request):
 class CustomerViewSet(viewsets.ModelViewSet):
 
     queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+    def get_serializer_class(self):
+        if self.action == 'get' or self.action=='list' or self.action=='retrieve' :
+            return CustomerSerializerGet
+        else:
+            return CustomerSerializerElse
     def get_permissions(self):
         if self.action == 'post' or self.action=='patch' or self.action=='put' :
             permission_classes =[AllowAny]
@@ -77,7 +81,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
         #url : http://127.0.0.1:8000/customer/check
         if(request.user.is_authenticated):
             customer= Customer.objects.get(username = request.user)
-            serializer = CustomerSerializer(customer)
+            serializer = CustomerSerializerElse(customer)
             return Response(serializer.data,status=status.HTTP_200_OK)
 
         else: 
@@ -92,6 +96,19 @@ class CustomerViewSet(viewsets.ModelViewSet):
         myorders = Order.objects.filter(customer=pk)
         myodersRes = OrderSerializerGet(myorders,many =True)
         return Response(myodersRes.data,status=status.HTTP_200_OK)
+    
+    @action(methods=['POST'],detail = True, url_path='subs',url_name = 'subs',permission_classes=[AllowAny])
+    def subscription(self,request,pk) :
+        print(request.data)
+        customer = Customer.objects.filter(id = pk)
+        customer.update(isSubscribed = True)
+        customer.update(subscriptionPeriod = request.data["duration"])
+        customer.update(date = datetime.datetime.now())
+        res= {
+            'status' : 'done'
+        }
+     
+        return Response(res)
 
 
 class ServiceProviderViewSet(viewsets.ModelViewSet):
@@ -130,9 +147,7 @@ class ServiceProviderViewSet(viewsets.ModelViewSet):
         myodersRes = OrderSerializerGet(myorders,many =True)
         return Response(myodersRes.data,status=status.HTTP_200_OK)
     
-  
-
-
+    
 class ServiceViewSet(viewsets.ModelViewSet):
 
     queryset = Service.objects.all()

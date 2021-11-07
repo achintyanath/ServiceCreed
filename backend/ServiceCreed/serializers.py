@@ -5,7 +5,12 @@ from .models import Category, Customer, PaymentDetails, Service, ServiceProvider
 
 
 
-class CustomerSerializer(serializers.ModelSerializer):
+class CustomerSerializerGet(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','isSubscribed','subscriptionPeriod','date']
+
+class CustomerSerializerElse(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture']
@@ -48,7 +53,7 @@ class PaymentDetailsSerializerElse(serializers.ModelSerializer):
 
 class OrderSerializerGet(serializers.ModelSerializer):
     provider=ServiceProviderSerializerGet()
-    customer = CustomerSerializer()
+    customer = CustomerSerializerGet()
     paymentDetails=PaymentDetailsSerializerGet()
 
     class Meta:

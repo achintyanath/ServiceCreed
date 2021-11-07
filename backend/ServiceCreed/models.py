@@ -34,8 +34,14 @@ class Service(models.Model):
         return f"{self.serviceName}"
 
 class Customer(AppUser):
+    isSubscribed = models.BooleanField(default=False)
+    subscriptionPeriod = models.CharField(
+        max_length=16,
+        null=True
+    )
+    date = models.DateField(null = True)
     #myorders are specified using the related_name in Order Model : myCustomerOrders
-    pass
+   
 
 class ServiceProvider(AppUser):
     category = models.ForeignKey(Category,on_delete=CASCADE,default=1)
@@ -44,7 +50,7 @@ class ServiceProvider(AppUser):
     #orderrecived is accessed by related_name in Order Model:  myServiceOrders
     def __str__(self):
         return f"{self.username}"
-
+gi
 
 
 class PaymentDetails(models.Model):
