@@ -57,7 +57,7 @@ def logoutrequest(request):
     res ={
         'status' :"loggedout"
     }
-    return Response(res,status=status.HTTP_200_OK)
+    return HttpResponse(res)
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
