@@ -20,14 +20,6 @@ class ServiceProviderSerializerElse(serializers.ModelSerializer):
         model = ServiceProvider
         fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','category','services','cost']
 
-class ServiceProviderSerializerGet(serializers.ModelSerializer):
-
-    class Meta:
-        model = ServiceProvider
-        fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','category','services','cost']
-        depth = 1
-
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -39,6 +31,20 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ['id','category','serviceName', 'description','serviceImage']
+
+class ServiceSerializerElse(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id','serviceName', 'category', 'description','serviceImage']
+
+class ServiceProviderSerializerGet(serializers.ModelSerializer):
+
+    services = ServiceSerializer()
+    class Meta:
+        model = ServiceProvider
+        fields = ['id','username','fullName','email', 'password', 'address', 'mobileNumber', 'profilePicture','services','cost']
+        depth = 1
+
 
 class PaymentDetailsSerializerGet(serializers.ModelSerializer):
     class Meta:

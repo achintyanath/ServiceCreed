@@ -8,7 +8,7 @@ import requests
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import AppUser, Category, Customer,ServiceProvider,Service, Order,PaymentDetails
-from .serializers import CategorySerializer, CustomerSerializerElse, CustomerSerializerGet, ServiceSerializer,  ServiceProviderSerializerElse,ServiceProviderSerializerGet, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse
+from .serializers import CategorySerializer, CustomerSerializerElse, CustomerSerializerGet, ServiceSerializer,  ServiceProviderSerializerElse,ServiceProviderSerializerGet, OrderSerializerGet, OrderSerializerElse, PaymentDetailsSerializerGet, PaymentDetailsSerializerElse, ServiceSerializerElse
 from rest_framework import viewsets
 from django.contrib.auth import  login, logout
 from django.core.exceptions import ValidationError
@@ -150,8 +150,13 @@ class ServiceProviderViewSet(viewsets.ModelViewSet):
     
 class ServiceViewSet(viewsets.ModelViewSet):
 
+    def get_serializer_class(self):
+        if self.action == 'get' or self.action=='list' or self.action=='retrieve' :
+            return ServiceSerializer
+        else:
+            return ServiceSerializerElse
+
     queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
     permission_classes = [AllowAny]
 
 class CategoryViewSet(viewsets.ModelViewSet):
