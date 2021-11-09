@@ -22,9 +22,9 @@ Course Project for CSN-291
 - Start Django Server
     ```bash
     cd backend
-    cd python manage.py makemigrations
-    cd python mangage.py migrate
-    cd python manage.py runserver
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py runserver
 	```
 
 
